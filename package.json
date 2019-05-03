@@ -2,12 +2,14 @@
   "name": "",
   "version": "",
   "dependencies": {
-    "@tensorflow/tfjs": "^1.1.0",
+    "@tensorflow/tfjs": "^1.1.2",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "papaparse": "^4.6.3"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.5",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0"
   }

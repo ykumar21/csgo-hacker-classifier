@@ -18,6 +18,7 @@ module.exports = function() {
 
   // Training parameters
   const numExamples = 1014;
+  const epoch = 1500;
 
   // Creating an optimizer which uses stocastic gradient descent
   const sgdOpt = tf.train.sgd(learningRate);
@@ -78,13 +79,22 @@ module.exports = function() {
     });
   }
 
-  // Converting arrays to tensors
   loadData().then(() => {
-
+    // Convert 2D arrays to tensors for training
     let inputTensor = tf.tensor2d(inputs);
     let targetsTensor = tf.tensor2d(targets);
 
-    model.predict(inputTensor).print();
+    Train().then(() => {
+      console.log("Training completed!");
+    });
+
+    async function Train() {
+      for(let i = 0; i < epoch; i++) {
+        const response = await model.fit(tf.stack(inputs),tf.stack(targets));
+        console.log(response.history.loss[0]);
+      }
+    }
+
 
     //targetsTensor.print();
   }).catch( (err) => {

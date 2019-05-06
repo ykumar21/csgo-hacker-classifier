@@ -10,7 +10,9 @@ module.exports = function(app) {
   });
 
   app.post('/train', function(request,response) {
-    trainModel();
+    trainModel(app,(results) => {
+
+    });
   });
 
 

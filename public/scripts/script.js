@@ -29,4 +29,19 @@ $(document).ready( function() {
       }
     })
   });
+
+  let dataArr = [];
+
+  var socket = io.connect('http://localhost:8080');
+
+  socket.on('getLose', function(data) {
+    dataArr.push(data);
+  });
+
+  socket.on('complete', function(data) {
+    console.log("Training complete");
+  });
+
+
+
 });

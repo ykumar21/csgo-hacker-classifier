@@ -5,7 +5,8 @@
     "@tensorflow/tfjs": "^1.1.2",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
-    "papaparse": "^4.6.3"
+    "papaparse": "^4.6.3",
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

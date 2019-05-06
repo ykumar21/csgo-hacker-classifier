@@ -2,8 +2,15 @@ const tf = require('@tensorflow/tfjs');
 const fs = require('fs');
 const papa = require('papaparse');
 
-module.exports = function() {
-  // Generate a new neural network
+function GetSign(x) {
+  return 1/(1+(Math.exp(-x)));
+}
+
+module.exports = function(app,callback) {
+
+  let io = app.get('socketio');
+
+  //Create a new neural network
   const model = tf.sequential();
 
   // Variable to hold dataset params
@@ -11,20 +18,20 @@ module.exports = function() {
   let targets = [];
 
   // Hyperparameters
-  const learningRate = 0.1;
-  const inputNodes = 6;
-  const hiddenNodes = 4;
+  const learningRate = 0.001;
+  const inputNodes = 36;
+  const hiddenNodes = 8;
   const outputNodes = 1;
 
   // Training parameters
   const numExamples = 1014;
-  const epoch = 1500;
+  const epoch = 10000;
 
   // Creating an optimizer which uses stocastic gradient descent
-  const sgdOpt = tf.train.sgd(learningRate);
+  const adamOpt  = tf.train.adam(learningRate);
 
   const modelConfig = {
-   optimizer: sgdOpt,
+   optimizer: adamOpt,
    loss: 'meanSquaredError'
   };
 
@@ -34,8 +41,6 @@ module.exports = function() {
    inputShape: [inputNodes], // 5 inputs
    activation: 'sigmoid',
    useBias: 1,
-   kernelInitializer: 'randomNormal', // Initialises the weight matrix randomly
-   biasInitializer: 'randomNormal', // Initialises the bias matrix randomly
    dtype: 'float32'
   });
 
@@ -44,8 +49,6 @@ module.exports = function() {
    units: outputNodes, // 2 nodes
    activation: 'sigmoid',
    useBias: 1,
-   kernelInitializer: 'randomNormal', // Initialises the weight matrix randomly
-   biasInitializer: 'randomNormal', // Initialises the bias matrix randomly
    dtype: 'float32'
   });
 
@@ -69,6 +72,7 @@ module.exports = function() {
             results.data[i] = results.data[i].map(Number);
 
             let row = results.data[i]; // Get the full row from dataset
+
             let tar = results.data[i].pop(); // Remove last element from each row
             inputs.push(row); // Push sliced row into input array
             targets.push([tar]); // Push popped element into target array
@@ -79,24 +83,30 @@ module.exports = function() {
     });
   }
 
+  async function Train(iTensor, tTensor) {
+    for(let i = 0; i < epoch; i++) {
+      const response = await model.fit(iTensor,tTensor);
+
+
+      console.log(response.history.loss[0]);
+
+    }
+  }
+
   loadData().then(() => {
     // Convert 2D arrays to tensors for training
     let inputTensor = tf.tensor2d(inputs);
     let targetsTensor = tf.tensor2d(targets);
+    let losses = [];
 
-    Train().then(() => {
+    Train(inputTensor, targetsTensor).then(() => {
+      io.emit('complete');
       console.log("Training completed!");
+      model.save('../public');
     });
-
-    async function Train() {
-      for(let i = 0; i < epoch; i++) {
-        const response = await model.fit(tf.stack(inputs),tf.stack(targets));
-        console.log(response.history.loss[0]);
-      }
-    }
+n
 
 
-    //targetsTensor.print();
   }).catch( (err) => {
     console.log(err);
   });

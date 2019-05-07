@@ -1,6 +1,7 @@
 const tf = require('@tensorflow/tfjs');
 const fs = require('fs');
 const papa = require('papaparse');
+const request = require('request');
 
 function GetSign(x) {
   return 1/(1+(Math.exp(-x)));
@@ -118,11 +119,13 @@ exports.trainModel = function(app,callback) {
 }
 
 exports.predict = function(steamId,callback) {
-  // Get stats from STEAM API
-
-  // Convert arrays to tensors
-
-  // Predict probability
-
-  // Send output
+  let key = 'F50F9C4B0B022F23427614F9A3A2D71B';
+  let url = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key="+key+"&steamid="+steamId;
+  request(url, function(err, response, body) {
+    if(err) {
+      console.log(err);
+    } else {
+      console.log(response.body);
+    }
+  });
 }

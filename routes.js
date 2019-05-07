@@ -9,12 +9,12 @@ module.exports = function(app) {
     response.render('index.ejs');
   });
 
-  app.post('/train', function(request,response) {
+  app.post('/train',urlencodedParser, function(request,response) {
     model.trainModel(app);
   });
 
-  app.post('/predict', function(request,response) {
-    predict();
+  app.post('/predict', urlencodedParser,function(request,response) {
+    model.predict(request.body.id);
   });
 
 }

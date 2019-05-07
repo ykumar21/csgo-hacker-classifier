@@ -30,6 +30,19 @@ $(document).ready( function() {
     })
   });
 
+  $('#predict').click( function() {
+    let id = $('#id').val();
+    let data = "id="+id;
+
+    $.post('/predict', data, function(e) {
+      if(e == 'err') {
+        console.error("error");
+      } else {
+        console.log("success");
+      }
+    })
+  });
+
   let dataArr = [];
 
   var socket = io.connect('http://localhost:8080');

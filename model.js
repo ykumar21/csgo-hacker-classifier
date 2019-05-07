@@ -6,9 +6,6 @@ function GetSign(x) {
   return 1/(1+(Math.exp(-x)));
 }
 
-module.exports = function(app,callback) {
-
-  let io = app.get('socketio');
 
   //Create a new neural network
   const model = tf.sequential();
@@ -25,7 +22,7 @@ module.exports = function(app,callback) {
 
   // Training parameters
   const numExamples = 1014;
-  const epoch = 10000;
+  const epoch = 500;
 
   // Creating an optimizer which uses stocastic gradient descent
   const adamOpt  = tf.train.adam(learningRate);
@@ -58,6 +55,12 @@ module.exports = function(app,callback) {
 
   // Compiling the neural network
   model.compile(modelConfig);
+
+
+exports.trainModel = function(app,callback) {
+
+  let io = app.get('socketio');
+
 
   // Get the dataset and train the model
 
@@ -102,9 +105,9 @@ module.exports = function(app,callback) {
     Train(inputTensor, targetsTensor).then(() => {
       io.emit('complete');
       console.log("Training completed!");
-      model.save('../public');
+
     });
-n
+
 
 
   }).catch( (err) => {
@@ -112,4 +115,14 @@ n
   });
 
 
+}
+
+exports.predict = function(steamId,callback) {
+  // Get stats from STEAM API
+
+  // Convert arrays to tensors
+
+  // Predict probability
+
+  // Send output
 }

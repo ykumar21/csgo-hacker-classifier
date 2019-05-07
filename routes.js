@@ -1,5 +1,5 @@
 const bodyParser = require('body-parser');
-const trainModel = require('./model.js');
+const model = require('./model.js');
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
@@ -10,10 +10,11 @@ module.exports = function(app) {
   });
 
   app.post('/train', function(request,response) {
-    trainModel(app,(results) => {
-
-    });
+    model.trainModel(app);
   });
 
+  app.post('/predict', function(request,response) {
+    predict();
+  });
 
 }

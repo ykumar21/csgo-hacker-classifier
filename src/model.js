@@ -1,7 +1,7 @@
 const tf = require('@tensorflow/tfjs');
 const fs = require('fs');
 const papa = require('papaparse');
-const request = require('request');
+
 
 function GetSign(x) {
   return 1/(1+(Math.exp(-x)));
@@ -17,7 +17,7 @@ function GetSign(x) {
 
   // Hyperparameters
   const learningRate = 0.001;
-  const inputNodes = 36;
+  const inputNodes = 34;
   const hiddenNodes = 8;
   const outputNodes = 1;
 
@@ -118,14 +118,9 @@ exports.trainModel = function(app,callback) {
 
 }
 
-exports.predict = function(steamId,callback) {
-  let key = 'F50F9C4B0B022F23427614F9A3A2D71B';
-  let url = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key="+key+"&steamid="+steamId;
-  request(url, function(err, response, body) {
-    if(err) {
-      console.log(err);
-    } else {
-      console.log(response.body);
-    }
-  });
+exports.predict = function(player_stats,callback) {
+  let stats = [JSON.parse(player_stats)];
+
+
+  callback(model.predict(tf.tensor2d(stats)));
 }

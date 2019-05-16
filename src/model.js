@@ -119,8 +119,10 @@ exports.trainModel = function(app,callback) {
 }
 
 exports.predict = function(player_stats,callback) {
-  let stats = [JSON.parse(player_stats)];
+  let stats = [player_stats];
+
+  let res = model.predict(tf.tensor2d(stats)).dataSync();
+  callback(Array.from(res));
 
 
-  callback(model.predict(tf.tensor2d(stats)));
 }

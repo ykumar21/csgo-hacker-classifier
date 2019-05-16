@@ -55,6 +55,10 @@ $(document).ready( function() {
     console.log("Training complete");
   });
 
+  socket.on('resultsReady', function(data) {
+    console.log(data[0]);
+  });
+
 
 
 });

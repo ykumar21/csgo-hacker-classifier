@@ -56,10 +56,10 @@ module.exports = function(app) {
           stats.push(GetWeaponAccuracy(guns[i]));
         }
 
-        predict(JSON.stringify(stats), function(results) {
+        model.predict(stats, function(results) {
           let io = app.get('socketio');
           io.emit('resultsReady', results);
-        
+
         });
 
       }
